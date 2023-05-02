@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--    <meta charset="UTF-8">--> <!--закоментил потомучто xml парсер не отрабатываает-->
+    <title>Api Logs</title>
+</head>
+<body>
+    {% if not logs %}
+    <h1>No logs!</h1>
+    {% endif %}
+
+    <ul>
+        {% for log in logs %}
+        <li>{{log.json()}}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
