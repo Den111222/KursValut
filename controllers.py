@@ -85,16 +85,19 @@ class ViewLogs(BaseController):
         return render_template("logs.html", logs=logs)
 
 class EditRate(BaseController):
-    def _call(self, from_currency, to_currency):
+    def _call(self, *args, **kwds):
+        data = args[0]
         if self.request.method == "GET":
-            return render_template("rate_edit.html", from_currency=from_currency, to_currency=to_currency)
+            return render_template("rate_edit.html", from_currency=data['from_currency'],
+                                   to_currency=data['to_currency'], source=data['source'])
         print(request.form)
         if "new_rate" not in request.form:
             raise Exception("new_rate parametr is required")
         if not request.form["new_rate"]:
             raise Exception("new_rate must be not empty")
         upd_count = (XRate.update({XRate.rate: float(request.form["new_rate"]), XRate.updated: datetime.now()})
-                     .where(XRate.from_currency == from_currency,
-                            XRate.to_currency == to_currency).execute())
+                     .where(XRate.from_currency == data['from_currency'],
+                            XRate.to_currency == data['to_currency'],
+                            XRate.module == data['source']).execute())
         print("upd_count", upd_count)
         return redirect(url_for('view_rates'))

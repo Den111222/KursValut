@@ -13,9 +13,7 @@ def check_ip(func):
     def checker(*args, **kwds):
         if request.remote_addr not in IP_LIST:
             return abort(403)
-
         return func(*args, **kwds)
-
     return checker
 
 @app.route("/")
@@ -44,8 +42,9 @@ def update_xrates(from_currency=None, to_currency=None, source=None):
 def view_logs(log_type):
     return controllers.ViewLogs().call()
 
-@app.route("/edit/<int:from_currency>/<int:to_currency>", methods=["GET", "POST"])
+@app.route("/edit/<int:from_currency>/<int:to_currency>/<string:source>", methods=["GET", "POST"])
 @check_ip
-def edit_xrate(from_currency, to_currency):
-    return controllers.EditRate().call(to_currency)
+def edit_xrate(from_currency, to_currency, source):
+    data = {'from_currency': from_currency, 'to_currency': to_currency, 'source': source}
+    return controllers.EditRate().call(data)
 
